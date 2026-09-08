@@ -1,0 +1,211 @@
+/* ============================================================
+   CYMATIC STUDIO v24 · REPERTORIO STYLES
+   Grid de versiones, tarjetas, etiquetas y efectos hover.
+   ============================================================ */
+
+/* ----- GRID PRINCIPAL ----- */
+.version-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    width: 100%;
+    margin-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+}
+
+/* ----- TARJETA DE VERSIÓN ----- */
+.version-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(4px);
+}
+
+.version-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Tarjeta especial (v24) */
+.version-card.special {
+    border-color: rgba(240, 160, 48, 0.2);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(4, 7, 16, 0.95) 100%);
+}
+.version-card.special:hover {
+    border-color: var(--accent-gold);
+}
+
+/* ----- TÍTULOS Y VERSIÓN ----- */
+.version-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+    letter-spacing: -0.5px;
+}
+
+.version-id {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+}
+
+/* ----- PRECIO ----- */
+.price {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+    font-family: var(--font-sans);
+}
+.price small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+.price .old {
+    font-size: 1rem;
+    text-decoration: line-through;
+    color: var(--accent-red);
+    margin-left: var(--space-sm);
+    opacity: 0.6;
+}
+
+/* ----- LISTA DE CARACTERÍSTICAS ----- */
+.version-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    flex-grow: 1;
+}
+
+.version-card ul li {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+.version-card ul li::before {
+    content: '✦';
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+/* ----- BOTÓN DE APERTURA ----- */
+.btn-open {
+    display: block;
+    text-align: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-open:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    transform: scale(1.01);
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.05);
+}
+
+.btn-open.gold {
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-magenta));
+    border: none;
+    color: #000;
+}
+.btn-open.gold:hover {
+    box-shadow: 0 0 35px rgba(240, 160, 48, 0.3);
+}
+
+/* ----- ETIQUETAS DE TIER ----- */
+.tag {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 2px var(--space-sm);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag.free {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.tag.pro {
+    background: rgba(0, 255, 204, 0.05);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+}
+.tag.ultra {
+    background: rgba(255, 0, 204, 0.05);
+    color: var(--accent-magenta);
+    border: 1px solid var(--accent-magenta);
+}
+.tag.enterprise {
+    background: rgba(157, 78, 221, 0.05);
+    color: var(--accent-purple);
+    border: 1px solid var(--accent-purple);
+}
+.tag.absolute {
+    background: rgba(240, 160, 48, 0.08);
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+}
+
+/* ----- RESPONSIVE ----- */
+@media (max-width: 768px) {
+    .version-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    .version-card {
+        padding: var(--space-md);
+    }
+    .price {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .version-grid {
+        gap: var(--space-sm);
+    }
+    .version-card h3 {
+        font-size: 1.1rem;
+    }
+    .tag {
+        position: relative;
+        top: auto;
+        right: auto;
+        align-self: flex-start;
+        margin-bottom: var(--space-sm);
+    }
+}
