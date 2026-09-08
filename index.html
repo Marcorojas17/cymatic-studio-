@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO · Repertorio Oficial v24</title>
+
+    <!-- Fuentes ultra-premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos globales y del repertorio -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/repertorio.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <style>
+        /* Micro-ajustes para la landing */
+        .app-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 30px 60px;
+            position: relative;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Fondo de partículas sutiles */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 255, 204, 0.02) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255, 0, 204, 0.01) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .logo {
+            font-family: var(--font-sans);
+            font-size: 2.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-magenta));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradShift 6s ease-in-out infinite alternate;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+        @keyframes gradShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .nav-links {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition-fast);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+        }
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-hover);
+            background: rgba(0, 255, 204, 0.02);
+        }
+        .btn-return {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(4px);
+        }
+        .btn-return:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.05);
+        }
+        .btn-return.hidden {
+            display: none;
+        }
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .version-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-med);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .version-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 50%, rgba(0, 255, 204, 0.01));
+            pointer-events: none;
+        }
+        .version-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-glow);
+        }
+        .version-card .tag {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            align-self: flex-start;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+        }
+        .tag.free {
+            background: rgba(100, 116, 139, 0.1);
+            color: #94a3b8;
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+        .tag.pro {
+            background: rgba(0, 255, 204, 0.05);
+            color: var(--accent-cyan);
+            border-color: rgba(0, 255, 204, 0.1);
+        }
+        .tag.ultra {
+            background: rgba(168, 85, 247, 0.05);
+            color: var(--accent-purple);
+            border-color: rgba(168, 85, 247, 0.1);
+        }
+        .tag.enterprise {
+            background: rgba(255, 0, 204, 0.05);
+            color: var(--accent-magenta);
+            border-color: rgba(255, 0, 204, 0.1);
+        }
+        .tag.absolute {
+            background: rgba(240, 160, 48, 0.1);
+            color: var(--accent-gold);
+            border-color: rgba(240, 160, 48, 0.2);
+        }
+        .version-card h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 2px;
+        }
+        .version-card .version-id {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+        .version-card .price {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 8px 0 12px;
+        }
+        .version-card .price small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        .version-card .price .old {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-decoration: line-through;
+            margin-left: 8px;
+            font-weight: 400;
+        }
+        .version-card ul {
+            list-style: none;
+            padding: 12px 0 0;
+            flex: 1;
+        }
+        .version-card ul li {
+            padding: 4px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+        .version-card ul li::before {
+            content: '✦';
+            color: var(--accent-cyan);
+            font-size: 0.7rem;
+        }
+        .btn-open {
+            margin-top: 16px;
+            padding: 12px 0;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: var(--radius-md);
+            color: #000;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+        .btn-open:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+        }
+        .btn-open.gold {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-magenta));
+            color: #000;
+        }
+        .btn-open.gold:hover {
+            box-shadow: 0 0 30px rgba(240, 160, 48, 0.3);
+        }
+        .footer {
+            margin-top: 60px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 2;
+        }
+        .footer .trace {
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+        }
+        .footer .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            font-size: 0.7rem;
+        }
+        .footer .contact-links a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        .footer .contact-links a:hover {
+            color: var(--text-primary);
+        }
+        @media (max-width: 768px) {
+            .app-wrapper { padding: 20px 16px 40px; }
+            .logo { font-size: 1.8rem; }
+            .version-grid { grid-template-columns: 1fr; }
+            .nav-links { gap: var(--space-sm); }
+            .nav-links a { font-size: 0.7rem; padding: 4px 8px; }
+            .footer .contact-links { flex-direction: column; gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">CYMATIC <small>REPERTORIO</small></div>
+            <nav class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="checkout.html">Comprar</a>
+                <a href="faq.html">FAQ</a>
+            </nav>
+            <div>
+                <button class="btn-return hidden" id="btnBack" onclick="goBack()">← Volver</button>
+            </div>
+        </header>
+
+        <!-- VERSION GRID -->
+        <div id="versionGrid" class="version-grid">
+
+            <!-- v1.0 -->
+            <div class="version-card" data-version="v1.0">
+                <span class="tag free">GRATIS</span>
+                <h3>Quantum Seed</h3>
+                <div class="version-id">v1.0</div>
+                <div class="price">$0 <small>USD</small></div>
+                <ul>
+                    <li>Motor de ondas cimáticas básico</li>
+                    <li>Interacción por mouse</li>
+                    <li>3 modos de geometría</li>
+                </ul>
+                <a href="versions/cymatic_v1.0.html" target="_blank" class="btn-open" onclick="playUiChime('open')">Abrir Demo</a>
+            </div>
+
+            <!-- v3.0 -->
+            <div class="version-card" data-version="v3.0">
+                <span class="tag pro">PRO</span>
+                <h3>Cymatic Core</h3>
+                <div class="version-id">v3.0</div>
+                <div class="price">$19 <small>USD</small> <span class="old">$39</span></div>
+                <ul>
+                    <li>5 modos de geometría sagrada</li>
+                    <li>Paletas de color básicas</li>
+                    <li>Slider de frecuencia</li>
+                </ul>
+                <a href="versions/cymatic_v3.0.html" target="_blank" class="btn-open" onclick="playUiChime('open')">Abrir Demo</a>
+            </div>
+
+            <!-- v8.0 -->
+            <div class="version-card" data-version="v8.0">
+                <span class="tag pro">PRO+</span>
+                <h3>Quantum Bloom</h3>
+                <div class="version-id">v8.0</div>
+                <div class="price">$79 <small>USD</small> <span class="old">$149</span></div>
+                <ul>
+                    <li>5 modos + 5 paletas</li>
+                    <li>Post-procesado Bloom</li>
+                    <li>Exportación de frames PNG</li>
+                    <li>Grabación de video WebM</li>
+                </ul>
+                <a href="versions/cymatic_v8.0.html" target="_blank" class="btn-open" onclick="playUiChime('open')">Abrir Demo</a>
+            </div>
+
+            <!-- v15.0 -->
+            <div class="version-card" data-version="v15.0">
+                <span class="tag ultra">ULTRA</span>
+                <h3>Omni-Sensory</h3>
+                <div class="version-id">v15.0</div>
+                <div class="price">$249 <small>USD</small> <span class="old">$399</span></div>
+                <ul>
+                    <li>Todo lo de PRO+</li>
+                    <li>IA generativa integrada</li>
+                    <li>Fluidos en GPU</li>
+                    <li>Tri-banda de audio</li>
+                </ul>
+                <a href="versions/cymatic_v15.0.html" target="_blank" class="btn-open" onclick="playUiChime('open')">Abrir Demo</a>
+            </div>
+
+            <!-- v21.5 -->
+            <div class="version-card" data-version="v21.5">
+                <span class="tag enterprise">ENTERPRISE</span>
+                <h3>Singular Quantum</h3>
+                <div class="version-id">v21.5</div>
+                <div class="price">$499 <small>USD</small> <span class="old">$999</span></div>
+                <ul>
+                    <li>Todo lo de ULTRA</li>
+                    <li>FFT en tiempo real (32 barras)</li>
+                    <li>Drag & Drop para archivos MP3 locales</li>
+                    <li>Sintetizador analógico aditivo integrado</li>
+                </ul>
+                <a href="versions/cymatic_v21.5.html" target="_blank" class="btn-open" onclick="playUiChime('open')">Abrir Demo</a>
+            </div>
+
+            <!-- v24 (Quantum Core) -->
+            <div class="version-card special" data-version="v24" style="border-color:rgba(240,160,48,0.3); background:linear-gradient(135deg, var(--bg-secondary) 0%, rgba(4,7,16,0.95) 100%);">
+                <span class="tag absolute">QUANTUM CORE</span>
+                <h3>Quantum Core v24</h3>
+                <div class="version-id">v24.0</div>
+                <div class="price" style="color: var(--accent-gold);">$749 <small>USD</small></div>
+                <ul>
+                    <li>Todo el repertorio de versiones (v1.0 a v24)</li>
+                    <li>Motor de Shaders WebGL 3D acelerado por GPU</li>
+                    <li>Sintetizador aditivo de 8 osciladores armónicos</li>
+                    <li>Procesamiento de sonido espacial Hi-Fi a 96kHz</li>
+                </ul>
+                <a href="versions/cymatic_v24.html" target="_blank" class="btn-open gold" onclick="playUiChime('quantum')">Desplegar Motor</a>
+            </div>
+
+        </div>
+
+        <!-- DEMO VIEW (opcional) -->
+        <div id="demoView" class="demo-view" style="display:none;">
+            <div class="demo-header">
+                <h2 id="demoTitle">CYMATIC STUDIO</h2>
+                <button class="btn-return" onclick="goBack()">← Volver</button>
+            </div>
+            <div class="demo-content" id="demoContent">
+                <p>Cargando...</p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="trace">[FOLIO]: 5204160405358537 | [SHA]: a4ff808e | [TRACE]: KRONOS-TRACE-PVA-5204160405358537</div>
+            <div class="contact-links">
+                <a href="mailto:marco.a.rojas.v@hotmail.com">📧 marco.a.rojas.v@hotmail.com</a>
+                <a href="mailto:proyectokronos@hotmail.com">📧 proyectokronos@hotmail.com</a>
+                <a href="https://wa.me/527225862335" target="_blank">📱 +52 722 586 2335</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="assets/js/audio.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/repertorio.js"></script>
+    <script>
+        // Función de sonido UI (Web Audio)
+        let audioCtx = null;
+        function playUiChime(type) {
+            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            gain.gain.setValueAtTime(0.05, now);
+            if (type === 'quantum') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } else {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        }
+        // Exponer para el HTML
+        window.playUiChime = playUiChime;
+
+        // Función de retorno (desde repertorio.js)
+        function goBack() {
+            const grid = document.getElementById('versionGrid');
+            const demo = document.getElementById('demoView');
+            const btnBack = document.getElementById('btnBack');
+            if (grid && demo && btnBack) {
+                grid.style.display = 'grid';
+                demo.style.display = 'none';
+                btnBack.classList.add('hidden');
+                if (typeof playSound === 'function') playSound('click');
+            }
+        }
+        // Exponer goBack globalmente
+        window.goBack = goBack;
+
+        // Inicializar: pre-cargar audio en primer clic
+        document.addEventListener('click', function initAudioOnFirstClick() {
+            if (!audioCtx) {
+                try { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+            }
+            document.removeEventListener('click', initAudioOnFirstClick);
+        }, { once: true });
+
+        console.log('🚀 CYMATIC STUDIO v24 · Landing Page cargada.');
+    </script>
+</body>
+</html>
