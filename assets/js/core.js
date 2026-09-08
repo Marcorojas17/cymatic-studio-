@@ -4,7 +4,22 @@
  * Gestión de temas, cursor personalizado y sistema de licencia.
  * ============================================================
  */
-
+/**
+ * Genera una clave de licencia que incluye un hash SHA-256 del archivo.
+ */
+async function generateSecureLicense(version, tier, email) {
+    const response = await fetch(`versions/cymatic_${version}.html`);
+    const blob = await response.blob();
+    const buffer = await blob.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const fileHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    // Crear una clave que incluya parte del hash
+    const shortHash = fileHash.substring(0, 8).toUpperCase();
+    const timestamp = Date.now().toString(36).toUpperCase();
+    return `CYMATIC-${tier}-${version.replace('v', 'V')}-${shortHash}-${timestamp}`;
+}
 (function() {
     'use strict';
 
