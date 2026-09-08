@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO v15.0 · Omni-Sensory</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #020308;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            cursor: none;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .ui-overlay {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(2, 3, 8, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 204, 0.08);
+            border-radius: 60px;
+            padding: 12px 28px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+        .ui-overlay strong {
+            color: #00ffcc;
+            font-weight: 600;
+        }
+        .btn-audio {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: linear-gradient(135deg, #00ffcc, #a855f7);
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+        }
+        .btn-audio:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.2);
+        }
+        .btn-audio:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        .btn-audio.hidden {
+            display: none;
+        }
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.1);
+            font-family: 'Courier New', monospace;
+            text-align: right;
+            letter-spacing: 0.5px;
+        }
+        .status span {
+            color: #00ffcc;
+        }
+    </style>
+</head>
+<body>
+    <div class="status">AUDIO: <span id="audioStatus">OFF</span></div>
+    <canvas id="c"></canvas>
+    <button class="btn-audio" id="btnAudio">🎵 ACTIVAR SINTETIZADOR</button>
+    <div class="ui-overlay">
+        <strong>v15.0</strong> · Omni-Sensory · Mueve el mouse para modificar la frecuencia
+    </div>
+
+    <script>
+        // ============================================================
+        // CYMATIC STUDIO v15.0 – Web Audio API + Síntesis monofónica
+        // El cursor controla la frecuencia del oscilador.
+        // ============================================================
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        let mouse = { x: w / 2, y: h / 2 };
+        let audioCtx = null;
+        let osc = null;
+        let gain = null;
+        let audioActive = false;
+        let phase = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            if (audioActive && osc) {
+                const freq = 60 + (mouse.x / w) * 600;
+                osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.05);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        // Motor gráfico (canvas 2D con interacción de mouse)
+        function draw() {
+            ctx.fillStyle = 'rgba(2, 3, 8, 0.06)';
+            ctx.fillRect(0, 0, w, h);
+            phase += 0.008;
+
+            const lines = 12;
+            for (let i = 0; i < lines; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = i % 2 === 0 ? 'rgba(0, 255, 204, 0.25)' : 'rgba(168, 85, 247, 0.15)';
+                ctx.lineWidth = i % 2 === 0 ? 1.5 : 0.5;
+
+                const baseY = (h / lines) * i + Math.sin(phase * 0.5 + i) * 8;
+                for (let x = 0; x < w; x += 6) {
+                    const dx = x - mouse.x;
+                    const dy = baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const influence = Math.max(0, (250 - dist) / 250);
+
+                    const wave = Math.sin(x * 0.008 + phase + i * 0.1) * 30;
+                    const mousePush = Math.sin(x * 0.025 + phase * 1.3) * (60 * influence) * (1 - Math.abs(dy) / h);
+                    const y = baseY + wave + mousePush;
+
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        // Audio
+        document.getElementById('btnAudio').addEventListener('click', () => {
+            if (audioActive) return;
+            try {
+                audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                osc = audioCtx.createOscillator();
+                gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                audioActive = true;
+                document.getElementById('audioStatus').textContent = 'ON';
+                document.getElementById('audioStatus').style.color = '#00ffcc';
+                document.getElementById('btnAudio').classList.add('hidden');
+                console.log('🎵 Sintetizador v15.0 activado.');
+            } catch (e) {
+                alert('Web Audio API no soportada en este navegador.');
+            }
+        });
+
+        draw();
+        console.log('🚀 CYMATIC v15.0 · Omni-Sensory activo.');
+    </script>
+</body>
+</html>
