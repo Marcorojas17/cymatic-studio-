@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO v8.0 · Quantum Bloom</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #010206;
+            font-family: 'Courier New', monospace;
+            cursor: none;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #00ffcc;
+            font-size: 11px;
+            letter-spacing: 1px;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
+        }
+        .hud span {
+            opacity: 0.4;
+        }
+        .cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #00ffcc;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+            transition: width 0.15s, height 0.15s, border-color 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="hud">◈ CYMATIC v8.0 · <span>MULTITHREADED MATRIX</span></div>
+    <canvas id="c"></canvas>
+    <script>
+        // ============================================================
+        // CYMATIC STUDIO v8.0 – Multi‑filamentos e interacción por mouse
+        // 15 líneas paralelas que se deforman con la proximidad del cursor.
+        // ============================================================
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        const cursor = document.getElementById('cursor');
+        let mouse = { x: w / 2, y: h / 2 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        let phase = 0;
+        const LINES = 20;
+
+        function draw() {
+            ctx.fillStyle = 'rgba(1, 2, 6, 0.08)';
+            ctx.fillRect(0, 0, w, h);
+            phase += 0.012;
+
+            for (let i = 0; i < LINES; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = i % 3 === 0 ? 'rgba(0, 255, 204, 0.4)' : 'rgba(0, 255, 204, 0.15)';
+                ctx.lineWidth = i % 3 === 0 ? 1.8 : 0.6;
+
+                const baseY = (h / LINES) * i;
+                for (let x = 0; x < w; x += 8) {
+                    const dx = x - mouse.x;
+                    const dy = baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const influence = Math.max(0, (200 - dist) / 200);
+
+                    const wave = Math.sin(x * 0.006 + phase + i * 0.12) * 35;
+                    const mousePush = Math.sin(x * 0.02 + phase * 1.5) * (50 * influence) * (1 - Math.abs(dy) / h);
+                    const y = baseY + wave + mousePush;
+
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+        console.log('🚀 CYMATIC v8.0 · Matriz interactiva activa.');
+    </script>
+</body>
+</html>
