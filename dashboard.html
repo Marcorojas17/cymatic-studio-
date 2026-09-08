@@ -12,6 +12,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/global.css">
     <style>
+        <!-- SECCIÓN DE SEGURIDAD -->
+<div class="glass-card">
+    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:8px;">🔐 Integridad Criptográfica</h3>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+        <div>
+            <span style="font-size:0.65rem; color:var(--text-tertiary); text-transform:uppercase;">SHA-256 del archivo actual</span>
+            <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--accent-cyan); word-break:break-all; background:rgba(0,0,0,0.2); padding:8px 12px; border-radius:var(--radius-sm); margin-top:4px;" id="fileHash">Calculando...</div>
+        </div>
+        <button class="btn-download" onclick="verificarIntegridad()" style="background:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple)); color:#000; border:none; padding:8px; border-radius:var(--radius-sm); cursor:pointer; font-weight:700;">🔍 Verificar Integridad</button>
+        <div id="integrityResult" style="font-size:0.8rem; margin-top:4px;"></div>
+    </div>
+</div>
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
