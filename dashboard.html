@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO · Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <style>
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 255, 204, 0.02) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .logo {
+            font-family: var(--font-sans);
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo small {
+            font-size: 0.7rem;
+            font-weight: 400;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.3);
+            margin-left: 8px;
+        }
+        .nav-links {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            transition: var(--transition-fast);
+        }
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-hover);
+            background: rgba(0, 255, 204, 0.02);
+        }
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 30px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 24px;
+            transition: var(--transition-med);
+        }
+        .glass-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-glow);
+        }
+        .license-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .license-key {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            word-break: break-all;
+        }
+        .license-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 4px 16px;
+            border-radius: 40px;
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .download-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-fast);
+        }
+        .download-item:hover {
+            border-color: var(--border-hover);
+        }
+        .download-item .version-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .download-item .version-desc {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin: 4px 0 8px;
+        }
+        .btn-download {
+            padding: 6px 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            text-decoration: none;
+            display: inline-block;
+            font-family: var(--font-mono);
+        }
+        .btn-download:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+        .btn-download.locked {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+            border: 1px solid var(--border-color);
+            pointer-events: none;
+        }
+        .btn-download.locked::after {
+            content: ' 🔒';
+            font-size: 0.6rem;
+        }
+        .support-area textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: var(--transition-fast);
+        }
+        .support-area textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.02);
+        }
+        .btn-support {
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-magenta));
+            border: none;
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-family: var(--font-sans);
+        }
+        .btn-support:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+        .footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .license-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .download-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .download-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">CYMATIC <small>DASHBOARD</small></div>
+            <nav class="nav-links">
+                <a href="index.html">Repertorio</a>
+                <a href="checkout.html">Comprar</a>
+                <a href="faq.html">FAQ</a>
+            </nav>
+        </header>
+
+        <!-- LICENCIA ACTIVA -->
+        <div class="glass-card">
+            <div class="license-info">
+                <div>
+                    <div style="font-size:0.65rem; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:1px; font-family:var(--font-mono);">Licencia activa</div>
+                    <div class="license-key" id="licenseDisplay">CYMATIC-PRO-V8-7F3A9C2D</div>
+                </div>
+                <div>
+                    <span class="license-badge" id="licenseTier">PRO</span>
+                    <span class="license-badge" style="border-color:var(--accent-purple); color:var(--accent-purple);" id="licenseVersion">v8.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESCARGA DE VERSIONES -->
+        <div class="glass-card">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:8px;">📦 Mis Descargas</h3>
+            <div class="download-grid">
+                <div class="download-item">
+                    <div class="version-label">v1.0</div>
+                    <div class="version-desc">Quantum Seed · Gratis</div>
+                    <a href="versions/cymatic_v1.0.html" class="btn-download" target="_blank">Descargar</a>
+                </div>
+                <div class="download-item">
+                    <div class="version-label">v8.0</div>
+                    <div class="version-desc">Quantum Bloom · PRO</div>
+                    <a href="versions/cymatic_v8.0.html" class="btn-download" target="_blank">Descargar</a>
+                </div>
+                <div class="download-item">
+                    <div class="version-label">v15.0</div>
+                    <div class="version-desc">Omni-Sensory · ULTRA</div>
+                    <button class="btn-download locked">Bloqueado</button>
+                </div>
+                <div class="download-item">
+                    <div class="version-label">v21.5</div>
+                    <div class="version-desc">Singular Quantum · ENTERPRISE</div>
+                    <button class="btn-download locked">Bloqueado</button>
+                </div>
+                <div class="download-item" style="border-color:rgba(240,160,48,0.2);">
+                    <div class="version-label">v24</div>
+                    <div class="version-desc">Quantum Core · ENTERPRISE+</div>
+                    <button class="btn-download locked">Bloqueado</button>
+                </div>
+            </div>
+            <p style="color:var(--text-tertiary); font-size:0.75rem; margin-top:12px;">📌 Las versiones bloqueadas están disponibles con la licencia correspondiente. <a href="checkout.html" style="color:var(--accent-cyan);">Actualizar licencia</a></p>
+        </div>
+
+        <!-- SOPORTE -->
+        <div class="glass-card support-area">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:8px;">📧 Consola de Soporte</h3>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:8px;">Describe el problema que estás experimentando y nuestro equipo te asistirá.</p>
+            <textarea placeholder="Escribe tu mensaje aquí... (máx. 500 caracteres)" maxlength="500"></textarea>
+            <button class="btn-support" onclick="enviarReporte()">📩 Enviar reporte</button>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>© 2026 CYMATIC STUDIO · <a href="index.html">Repertorio</a> · <a href="checkout.html">Comprar</a> · <a href="faq.html">FAQ</a></p>
+            <div style="margin-top:4px; font-size:0.6rem; color:var(--text-tertiary);">Folio: 5204160405358537 · SHA: a4ff808e</div>
+        </footer>
+
+    </div>
+
+    <script>
+        // Simulación de licencia desde URL o localStorage
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            let lic = params.get('licencia') || localStorage.getItem('cymatic_licencia') || 'CYMATIC-PRO-V8-7F3A9C2D';
+            document.getElementById('licenseDisplay').textContent = lic;
+            localStorage.setItem('cymatic_licencia', lic);
+
+            // Extraer tier y versión (simulado)
+            let tier = 'PRO', version = 'v8.0';
+            if (lic.startsWith('CYMATIC-ULTRA')) { tier = 'ULTRA'; version = 'v15.0'; }
+            else if (lic.startsWith('CYMATIC-ENT')) { tier = 'ENTERPRISE'; version = 'v21.5'; }
+            else if (lic.startsWith('CYMATIC-PERS')) { tier = 'PERSONAL'; version = 'v3.0'; }
+            document.getElementById('licenseTier').textContent = tier;
+            document.getElementById('licenseVersion').textContent = version;
+        })();
+
+        function enviarReporte() {
+            const textarea = document.querySelector('.support-area textarea');
+            const msg = textarea.value.trim();
+            if (!msg) {
+                alert('Por favor, escribe un mensaje antes de enviar.');
+                return;
+            }
+            alert('✅ Reporte enviado correctamente.\n\nNuestro equipo te responderá en menos de 24 horas.\n\nMensaje: ' + msg);
+            textarea.value = '';
+            // Aquí se podría integrar con un backend real
+        }
+        window.enviarReporte = enviarReporte;
+    </script>
+
+</body>
+</html>
