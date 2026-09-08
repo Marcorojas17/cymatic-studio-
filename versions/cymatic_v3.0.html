@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO v3.0 · Cymatic Core</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #010206;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #00ffcc;
+            font-size: 11px;
+            letter-spacing: 1px;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
+        }
+        .hud span {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="hud">◈ CYMATIC v3.0 · <span>VECTOR CORE</span></div>
+    <canvas id="c"></canvas>
+    <script>
+        // ============================================================
+        // CYMATIC STUDIO v3.0 – Primer motor Canvas 2D
+        // Bucle requestAnimationFrame con una onda senoidal pura.
+        // ============================================================
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        let phase = 0;
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        function draw() {
+            // Fondo con rastro (motion blur)
+            ctx.fillStyle = 'rgba(1, 2, 6, 0.15)';
+            ctx.fillRect(0, 0, w, h);
+
+            phase += 0.04;
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ffcc';
+            ctx.lineWidth = 1.5;
+            ctx.shadowColor = '#00ffcc';
+            ctx.shadowBlur = 10;
+
+            for (let x = 0; x < w; x++) {
+                const y = (h / 2) + Math.sin(x * 0.008 + phase) * 60;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        console.log('🚀 CYMATIC v3.0 · Vector Core activo.');
+    </script>
+</body>
+</html>
