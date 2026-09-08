@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO v21.5 · Singular Quantum</title>
+    <style>
+        /* ============================================================
+           CYMATIC STUDIO v21.5 – FFT + Dashboard monolítico
+           ============================================================ */
+        :root {
+            --c-cyan: #00ffcc;
+            --c-purple: #a855f7;
+            --c-magenta: #ff00cc;
+            --bg: #020308;
+        }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            cursor: none;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #q-cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--c-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+        }
+        .hud-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(4, 7, 16, 0.8);
+            border: 1px solid rgba(0, 255, 204, 0.1);
+            padding: 20px 24px;
+            border-radius: 12px;
+            z-index: 10;
+            backdrop-filter: blur(12px);
+            min-width: 220px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .hud-panel .title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--c-cyan);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .hud-panel .fft-tray {
+            display: flex;
+            gap: 2px;
+            height: 40px;
+            align-items: flex-end;
+            margin-top: 8px;
+        }
+        .hud-panel .fft-bar {
+            flex: 1;
+            background: var(--c-cyan);
+            height: 4px;
+            border-radius: 1px;
+            transition: height 0.08s ease;
+            min-height: 2px;
+        }
+        .hud-panel .btn-audio {
+            margin-top: 12px;
+            background: linear-gradient(135deg, var(--c-cyan), var(--c-purple));
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+        .hud-panel .btn-audio:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
+        }
+        .hud-panel .status {
+            margin-top: 6px;
+            font-size: 0.55rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        .hud-panel .status .online {
+            color: var(--c-cyan);
+        }
+        .footer-trace {
+            position: fixed;
+            bottom: 16px;
+            right: 20px;
+            z-index: 10;
+            font-size: 0.5rem;
+            color: rgba(255, 255, 255, 0.03);
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="q-cursor"></div>
+
+    <div class="hud-panel">
+        <div class="title">◈ QUANTUM NODE v21.5</div>
+        <button class="btn-audio" id="btnAudio">🎵 ENCENDER MOTOR AUDIO</button>
+        <div class="fft-tray" id="tray"></div>
+        <div class="status">FFT: <span id="fftStatus" class="online">● INACTIVO</span></div>
+    </div>
+
+    <canvas id="cv"></canvas>
+    <div class="footer-trace">TRACE: KRONOS-TRACE-PVA-5204160405358537</div>
+
+    <script>
+        // ============================================================
+        // CYMATIC STUDIO v21.5 – FFT + Síntesis dual + Analizador de espectro
+        // ============================================================
+
+        // ---- Cursor ----
+        const cursor = document.getElementById('q-cursor');
+        let mX = 0,
+            mY = 0,
+            bX = 0,
+            bY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mX = e.clientX;
+            mY = e.clientY;
+        });
+
+        // ---- FFT Bars ----
+        const tray = document.getElementById('tray');
+        const bars = [];
+        const BAR_COUNT = 24;
+        for (let i = 0; i < BAR_COUNT; i++) {
+            const b = document.createElement('div');
+            b.className = 'fft-bar';
+            tray.appendChild(b);
+            bars.push(b);
+        }
+
+        // ---- Canvas ----
+        const canvas = document.getElementById('cv');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        // ---- Audio (Web Audio API con FFT) ----
+        let audioCtx = null;
+        let analyzer = null;
+        let dataArr = [];
+        let audioActive = false;
+        let osc1 = null,
+            osc2 = null,
+            gainNode = null;
+
+        document.getElementById('btnAudio').addEventListener('click', () => {
+            if (audioActive) return;
+            try {
+                audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                analyzer = audioCtx.createAnalyser();
+                analyzer.fftSize = BAR_COUNT * 2;
+                dataArr = new Uint8Array(analyzer.frequencyBinCount);
+
+                gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+
+                osc1 = audioCtx.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(220, audioCtx.currentTime);
+                osc1.connect(gainNode);
+
+                osc2 = audioCtx.createOscillator();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(330, audioCtx.currentTime);
+                osc2.connect(gainNode);
+
+                gainNode.connect(analyzer);
+                analyzer.connect(audioCtx.destination);
+
+                osc1.start();
+                osc2.start();
+
+                audioActive = true;
+                document.getElementById('fftStatus').textContent = '● ACTIVO';
+                document.getElementById('fftStatus').style.color = '#00ffcc';
+                document.getElementById('btnAudio').textContent = '🎵 AUDIO ACTIVO';
+                document.getElementById('btnAudio').style.opacity = '0.5';
+                document.getElementById('btnAudio').style.cursor = 'default';
+
+                console.log('🎵 Motor FFT v21.5 iniciado.');
+            } catch (e) {
+                alert('Web Audio API no disponible.');
+            }
+        });
+
+        // ---- Loop de renderizado ----
+        let phase = 0;
+
+        function frame() {
+            // Interpolación del cursor
+            bX += (mX - bX) * 0.15;
+            bY += (mY - bY) * 0.15;
+            cursor.style.left = bX + 'px';
+            cursor.style.top = bY + 'px';
+
+            // Fondo con rastro
+            ctx.fillStyle = 'rgba(2, 3, 8, 0.08)';
+            ctx.fillRect(0, 0, w, h);
+            phase += 0.005;
+
+            // Actualizar FFT
+            if (audioActive && analyzer) {
+                analyzer.getByteFrequencyData(dataArr);
+                for (let i = 0; i < BAR_COUNT; i++) {
+                    const val = dataArr[i] || 0;
+                    const pct = Math.max(2, (val / 255) * 100);
+                    bars[i].style.height = pct + '%';
+                }
+            }
+
+            // Onda principal (afectada por el mouse)
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+            ctx.lineWidth = 1.2;
+            const mouseInfluence = 1 - Math.abs(bY - h / 2) / h;
+            for (let x = 0; x < w; x += 10) {
+                const y = (h / 2) + Math.sin(x * 0.004 + phase) * 50 +
+                    Math.sin(x * 0.008 + phase * 1.7) * 30 * mouseInfluence;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Si el audio está activo, modular frecuencia con el mouse
+            if (audioActive && osc1 && osc2) {
+                const freqBase = 60 + (bX / w) * 600;
+                osc1.frequency.setTargetAtTime(freqBase, audioCtx.currentTime, 0.05);
+                osc2.frequency.setTargetAtTime(freqBase * 1.5, audioCtx.currentTime, 0.05);
+            }
+
+            requestAnimationFrame(frame);
+        }
+
+        frame();
+        console.log('🚀 CYMATIC v21.5 · Singular Quantum activo.');
+    </script>
+</body>
+</html>
