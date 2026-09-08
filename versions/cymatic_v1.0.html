@@ -6,107 +6,910 @@
     <meta name="folio" content="5204160405358537">
     <meta name="sha" content="a4ff808e">
     <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
-    <title>CYMATIC STUDIO v1.0 · Quantum Seed</title>
+    <title>CYMATIC STUDIO PRO · Motor Audiovisual Cuántico</title>
+
+    <!-- ===== ESTILOS ===== -->
     <style>
-        /* ============================================================
-           CYMATIC STUDIO v1.0 – Legacy Static Engine
-           ============================================================ */
+        /* Reset y variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --neon-cyan: #00ffcc;
+            --neon-magenta: #ff00cc;
+            --neon-purple: #a855f7;
+            --neon-gold: #f0a030;
+            --bg-primary: #020308;
+            --text-primary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(4, 7, 16, 0.8);
+            --glass-border: rgba(0, 255, 204, 0.08);
+            --radius: 12px;
+            --space: 12px;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
         body {
-            background: #010206;
-            color: rgba(255, 255, 255, 0.3);
-            font-family: 'Courier New', monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow: hidden;
+            height: 100vh;
             user-select: none;
         }
-        .container {
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 60px 80px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            max-width: 600px;
+
+        #canvas-kronos {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
-        .container h1 {
-            font-size: 2rem;
-            letter-spacing: 4px;
-            margin-bottom: 12px;
-            color: #00ffcc;
-            text-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+
+        /* HUD Principal */
+        .hud {
+            position: absolute;
+            z-index: 10;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
         }
-        .container .sub {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.2);
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+        .hud * {
+            pointer-events: auto;
         }
-        .container .tag {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            background: rgba(0, 255, 204, 0.05);
-            border: 1px solid rgba(0, 255, 204, 0.1);
-            color: #00ffcc;
-            margin-bottom: 16px;
+        #hud-izq {
+            top: 16px;
+            left: 16px;
+            width: 340px;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
         }
-        .container p {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.4);
+        #hud-der {
+            top: 16px;
+            right: 16px;
+            width: 300px;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
         }
-        .container .trace {
-            margin-top: 20px;
-            font-size: 0.55rem;
-            color: rgba(255, 255, 255, 0.08);
+
+        .titulo {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            margin-bottom: 8px;
             letter-spacing: 1px;
         }
-        /* Efecto de parpadeo sutil */
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 0.3;
-            }
-            50% {
-                opacity: 1;
-            }
+        .resaltado {
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--neon-cyan);
         }
-        .container .dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: #00ffcc;
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+        .row .val {
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 6px;
+        }
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
+        }
+        .btn.magenta {
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-purple));
+            color: #fff;
+        }
+        .btn.gold {
+            background: linear-gradient(135deg, var(--neon-gold), #ff8800);
+            color: #000;
+        }
+
+        .log-area {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.6rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-top: 6px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 6px;
+        }
+        .log-area .log-entry {
+            border-left: 2px solid var(--neon-cyan);
+            padding-left: 8px;
+            margin-bottom: 2px;
+            opacity: 0.8;
+        }
+        .log-area .log-entry .time {
+            color: var(--text-muted);
+        }
+        .log-area .log-entry .highlight {
+            color: var(--neon-cyan);
+        }
+
+        /* FFT Bars */
+        .fft-container {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            padding: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .fft-bar {
+            flex: 1;
+            height: 0%;
+            background: linear-gradient(to top, var(--neon-cyan), var(--neon-magenta));
+            border-radius: 1px;
+            transition: height 0.05s ease;
+            min-height: 2px;
+        }
+
+        /* Selectores de frecuencia Solfeggio */
+        .solfeggio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .solfeggio-btn {
+            background: rgba(0, 255, 204, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 4px 0;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .solfeggio-btn:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+        }
+        .solfeggio-btn.active {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 255, 204, 0.05);
+            color: var(--neon-cyan);
+        }
+
+        /* Sliders */
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--neon-cyan);
+            background: transparent;
+            cursor: pointer;
+            height: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            animation: pulse 2s infinite;
-            margin-right: 8px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            #hud-izq,
+            #hud-der {
+                width: calc(100vw - 32px);
+                left: 16px;
+                right: 16px;
+                top: 16px;
+                max-height: 40vh;
+            }
+            #hud-der {
+                top: auto;
+                bottom: 16px;
+            }
+            .solfeggio-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="tag">🕊️ Legado</div>
-        <h1>CYMATIC STUDIO</h1>
-        <div class="sub">v1.0 · Quantum Seed</div>
-        <p>
-            <span class="dot"></span> Nodo estático de entrada<br>
-            Sin audio · Sin canvas · Sin interacción<br>
-            El origen del motor cimático.
-        </p>
-        <div class="trace">
-            FOLIO: 5204160405358537 | SHA: a4ff808e<br>
-            TRACE: KRONOS-TRACE-PVA
+
+    <!-- CANVAS -->
+    <canvas id="canvas-kronos"></canvas>
+
+    <!-- HUD IZQUIERDO -->
+    <div class="hud" id="hud-izq">
+        <div class="titulo">◢ CYMATIC STUDIO PRO ◣</div>
+        <div class="row"><span>Núcleo</span><span class="val">MT01JAAF a4ff808e</span></div>
+        <div class="row"><span>Modo</span><span class="val" id="txt-dimension">1D · Filamento</span></div>
+        <div class="row"><span>FPS</span><span class="val" id="fps">60</span></div>
+        <div class="row"><span>Audio</span><span class="val" id="txt-audio">OFF</span></div>
+
+        <!-- FFT -->
+        <div class="fft-container" id="fftMeter"></div>
+
+        <!-- Controles -->
+        <div style="margin-top:8px;">
+            <label style="font-size:0.6rem; color:var(--text-muted);">Frecuencia base</label>
+            <input type="range" id="freqSlider" min="20" max="2000" value="440" step="1">
+            <div class="row"><span>Frecuencia</span><span class="val" id="freqDisplay">440 Hz</span></div>
+        </div>
+
+        <div style="margin-top:6px;">
+            <label style="font-size:0.6rem; color:var(--text-muted);">Forma de onda</label>
+            <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px;">
+                <button class="btn" style="flex:1; padding:4px;" data-wave="sine">Seno</button>
+                <button class="btn" style="flex:1; padding:4px;" data-wave="sawtooth">Sierra</button>
+                <button class="btn" style="flex:1; padding:4px;" data-wave="square">Cuadrada</button>
+                <button class="btn" style="flex:1; padding:4px;" data-wave="triangle">Triangular</button>
+            </div>
+        </div>
+
+        <div style="margin-top:6px;">
+            <label style="font-size:0.6rem; color:var(--text-muted);">Frecuencias Solfeggio</label>
+            <div class="solfeggio-grid" id="solfeggioGrid">
+                <button class="solfeggio-btn" data-freq="432">432Hz</button>
+                <button class="solfeggio-btn active" data-freq="528">528Hz</button>
+                <button class="solfeggio-btn" data-freq="639">639Hz</button>
+                <button class="solfeggio-btn" data-freq="741">741Hz</button>
+                <button class="solfeggio-btn" data-freq="852">852Hz</button>
+                <button class="solfeggio-btn" data-freq="963">963Hz</button>
+            </div>
+        </div>
+
+        <button class="btn" id="btn-micro">🎤 ACTIVAR MICRÓFONO</button>
+        <button class="btn magenta" id="btn-synth">♪ SINTETIZADOR</button>
+        <button class="btn gold" id="btn-figure">🌀 CAMBIAR FIGURA</button>
+
+        <div style="font-size:0.5rem; color:var(--text-muted); margin-top:8px; text-align:center; opacity:0.5;">
+            TRACE: KRONOS-TRACE-PVA-5204160405358537<br>
+            SC: 2607146379465
         </div>
     </div>
+
+    <!-- HUD DERECHO (LOGS) -->
+    <div class="hud" id="hud-der">
+        <div class="titulo">📋 TELEMETRÍA</div>
+        <div class="log-area" id="logArea">
+            <div class="log-entry"><span class="time">[00:00:00]</span> <span class="highlight">Sistema iniciado</span></div>
+        </div>
+        <button class="btn" style="background:rgba(255,255,255,0.03); color:var(--text-muted); margin-top:4px;" id="btn-clear-log">🗑️ Limpiar</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT: MOTOR COMPLETO ===== -->
+    <!-- ============================================================ -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // 1. IMPORTACIONES
+        // ============================================================
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // ============================================================
+        // 2. ESTADO GLOBAL
+        // ============================================================
+        let modoDimension = 1; // 1, 2, 3
+        let modoCuantico = false;
+        let figuraActual = 0; // 0=Chladni, 1=Lissajous, 2=Espiral, 3=Mandala
+        const FIGURAS = ['Chladni', 'Lissajous', 'Espiral', 'Mandala'];
+
+        let audioContext = null;
+        let analyser = null;
+        let dataArray = null;
+        let nivelAudio = 0;
+        let synthActivo = false;
+        let osciladores = [];
+        let waveform = 'sine';
+        let frecuenciaBase = 440;
+
+        let scene, camera, renderer, composer, controls;
+        let pointsMesh, terrain, refLine;
+        let geometry, material;
+        const COUNT = 3000;
+        let boids = [];
+        let cristales = [];
+        let figurePhase = 0;
+
+        let mouseX = 0,
+            mouseY = 0;
+        let teclas = {};
+        let lastTime = performance.now();
+        let frameCount = 0;
+
+        // ============================================================
+        // 3. DOM REFERENCIAS
+        // ============================================================
+        const canvas = document.getElementById('canvas-kronos');
+        const logArea = document.getElementById('logArea');
+        const fftContainer = document.getElementById('fftMeter');
+        const FFT_SIZE = 24;
+        for (let i = 0; i < FFT_SIZE; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'fft-bar';
+            fftContainer.appendChild(bar);
+        }
+        const fftBars = fftContainer.querySelectorAll('.fft-bar');
+
+        function guardarLog(msg, highlight = false) {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML =
+                `<span class="time">[${time}]</span> ${highlight ? '<span class="highlight">' + msg + '</span>' : msg}`;
+            logArea.prepend(entry);
+            if (logArea.children.length > 50) {
+                logArea.removeChild(logArea.lastChild);
+            }
+        }
+        guardarLog('🚀 Motor iniciado', true);
+
+        // ============================================================
+        // 4. AUDIO
+        // ============================================================
+        async function activarMicrofono() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                const src = audioContext.createMediaStreamSource(stream);
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = FFT_SIZE * 2;
+                src.connect(analyser);
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                document.getElementById('txt-audio').textContent = 'ON';
+                guardarLog('🎤 Micrófono activado', true);
+            } catch (e) {
+                alert('Permiso de micrófono denegado.');
+            }
+        }
+        document.getElementById('btn-micro').addEventListener('click', activarMicrofono);
+
+        function toggleSintetizador() {
+            if (!audioContext) {
+                audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            }
+            synthActivo = !synthActivo;
+            if (synthActivo) {
+                document.getElementById('btn-synth').textContent = '■ DETENER';
+                // Crear 3 osciladores con la forma de onda seleccionada
+                const freqs = [frecuenciaBase, frecuenciaBase * 1.5, frecuenciaBase * 2];
+                for (let i = 0; i < 3; i++) {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.type = waveform;
+                    osc.frequency.value = freqs[i];
+                    gain.gain.value = 0.03;
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.start();
+                    osciladores.push({ osc, gain, base: freqs[i] });
+                }
+                guardarLog('♪ Sintetizador activado (ondas: ' + waveform + ')', true);
+            } else {
+                document.getElementById('btn-synth').textContent = '♪ SINTETIZADOR';
+                osciladores.forEach(o => { try { o.osc.stop(); } catch (e) {} });
+                osciladores = [];
+                guardarLog('🔇 Sintetizador apagado');
+            }
+        }
+        document.getElementById('btn-synth').addEventListener('click', toggleSintetizador);
+
+        // Selector de forma de onda
+        document.querySelectorAll('[data-wave]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                waveform = btn.dataset.wave;
+                // Actualizar osciladores existentes
+                osciladores.forEach(o => { try { o.osc.type = waveform; } catch (e) {} });
+                guardarLog('🎵 Forma de onda: ' + waveform);
+            });
+        });
+
+        // Selector de frecuencia Solfeggio
+        document.querySelectorAll('.solfeggio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const freq = parseFloat(btn.dataset.freq);
+                frecuenciaBase = freq;
+                document.getElementById('freqSlider').value = freq;
+                document.getElementById('freqDisplay').textContent = freq + ' Hz';
+                // Actualizar osciladores
+                osciladores.forEach((o, i) => {
+                    try {
+                        o.osc.frequency.setTargetAtTime(freq * (1 + i * 0.5), audioContext.currentTime, 0.1);
+                        o.base = freq * (1 + i * 0.5);
+                    } catch (e) {}
+                });
+                guardarLog(`🔮 Frecuencia Solfeggio: ${freq}Hz`, true);
+            });
+        });
+
+        // Slider de frecuencia
+        const freqSlider = document.getElementById('freqSlider');
+        const freqDisplay = document.getElementById('freqDisplay');
+        freqSlider.addEventListener('input', () => {
+            frecuenciaBase = parseFloat(freqSlider.value);
+            freqDisplay.textContent = frecuenciaBase + ' Hz';
+            // Actualizar osciladores
+            osciladores.forEach((o, i) => {
+                try {
+                    o.osc.frequency.setTargetAtTime(frecuenciaBase * (1 + i * 0.5), audioContext.currentTime, 0.1);
+                    o.base = frecuenciaBase * (1 + i * 0.5);
+                } catch (e) {}
+            });
+            // Desactivar Solfeggio activo
+            document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+        });
+
+        // ============================================================
+        // 5. THREE.JS - ESCENA
+        // ============================================================
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x020308);
+        scene.fog = new THREE.FogExp2(0x020308, 0.008);
+
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 2, 8);
+        camera.lookAt(0, 0, 0);
+
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            preserveDrawingBuffer: true,
+            alpha: false
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+
+        // Controles de órbita
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = false;
+        controls.target.set(0, 0, 0);
+        controls.minDistance = 2;
+        controls.maxDistance = 20;
+
+        // Post-procesado (Bloom)
+        composer = new EffectComposer(renderer);
+        const renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+        const bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            0.2, 0.3, 0.1
+        );
+        composer.addPass(bloomPass);
+
+        // ============================================================
+        // 6. PARTÍCULAS
+        // ============================================================
+        geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(COUNT * 3);
+        const colors = new Float32Array(COUNT * 3);
+        const sizes = new Float32Array(COUNT);
+
+        for (let i = 0; i < COUNT; i++) {
+            const i3 = i * 3;
+            // Posiciones iniciales en 1D
+            positions[i3] = (Math.random() - 0.5) * 10;
+            positions[i3 + 1] = 0;
+            positions[i3 + 2] = 0;
+
+            // Colores aleatorios (base cyan)
+            colors[i3] = 0.0;
+            colors[i3 + 1] = 0.8 + Math.random() * 0.2;
+            colors[i3 + 2] = 0.6 + Math.random() * 0.4;
+
+            sizes[i] = 0.03 + Math.random() * 0.05;
+
+            // Datos de cada partícula (boid)
+            boids.push({
+                pos: new THREE.Vector3(positions[i3], 0, 0),
+                target1D: new THREE.Vector3((Math.random() - 0.5) * 10, 0, 0),
+                target2D: new THREE.Vector3((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, 0),
+                target3D: new THREE.Vector3((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6),
+                vel: new THREE.Vector3((Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) *
+                    0.02),
+                fase: Math.random() * Math.PI * 2,
+                color: new THREE.Color(colors[i3], colors[i3 + 1], colors[i3 + 2])
+            });
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        // Textura de partícula (glow circular)
+        const canvasTexture = document.createElement('canvas');
+        canvasTexture.width = 32;
+        canvasTexture.height = 32;
+        const ctx = canvasTexture.getContext('2d');
+        const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.3, 'rgba(255,255,255,0.8)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 32, 32);
+        const texture = new THREE.CanvasTexture(canvasTexture);
+
+        material = new THREE.PointsMaterial({
+            size: 0.08,
+            map: texture,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            vertexColors: true,
+            opacity: 0.9,
+            sizeAttenuation: true
+        });
+
+        pointsMesh = new THREE.Points(geometry, material);
+        scene.add(pointsMesh);
+
+        // Línea de referencia 1D
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-8, 0, 0),
+            new THREE.Vector3(8, 0, 0)
+        ]);
+        const lineMat = new THREE.LineBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.15
+        });
+        refLine = new THREE.Line(lineGeo, lineMat);
+        scene.add(refLine);
+
+        // Terreno de malla
+        const meshGeo = new THREE.PlaneGeometry(16, 16, 30, 30);
+        const meshMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.03
+        });
+        terrain = new THREE.Mesh(meshGeo, meshMat);
+        terrain.rotation.x = -Math.PI / 2;
+        terrain.position.y = -2.5;
+        scene.add(terrain);
+
+        // ============================================================
+        // 7. CRISTALES
+        // ============================================================
+        const cristalGeo = new THREE.OctahedronGeometry(0.2, 0);
+
+        function crearCristal() {
+            const idx = Math.floor(Math.random() * COUNT);
+            const posAttr = geometry.attributes.position;
+            const p = new THREE.Vector3(
+                posAttr.array[idx * 3],
+                posAttr.array[idx * 3 + 1],
+                posAttr.array[idx * 3 + 2]
+            );
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.9
+            });
+            const mesh = new THREE.Mesh(cristalGeo, mat);
+            mesh.position.copy(p);
+            mesh.userData = {
+                baseY: p.y,
+                rotSpeed: Math.random() * 0.02 + 0.01,
+                phase: Math.random() * Math.PI * 2
+            };
+            scene.add(mesh);
+            cristales.push(mesh);
+
+            // Sonido al crear
+            if (audioContext) {
+                try {
+                    const osc = audioContext.createOscillator();
+                    const g = audioContext.createGain();
+                    osc.frequency.value = 220 + Math.random() * 440;
+                    g.gain.setValueAtTime(0.05, audioContext.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+                    osc.connect(g);
+                    g.connect(audioContext.destination);
+                    osc.start();
+                    osc.stop(audioContext.currentTime + 0.8);
+                } catch (e) {}
+            }
+            guardarLog(`💎 Cristal #${cristales.length} en [${p.x.toFixed(2)}, ${p.y.toFixed(2)}]`, true);
+        }
+
+        // ============================================================
+        // 8. CAMBIO DE FIGURA
+        // ============================================================
+        let figuraIndex = 0;
+
+        function cambiarFigura() {
+            figuraIndex = (figuraIndex + 1) % FIGURAS.length;
+            document.getElementById('btn-figure').textContent = `🌀 ${FIGURAS[figuraIndex]}`;
+            guardarLog(`🔄 Figura: ${FIGURAS[figuraIndex]}`, true);
+        }
+        document.getElementById('btn-figure').addEventListener('click', cambiarFigura);
+
+        // ============================================================
+        // 9. CAPTURA DE PANTALLA
+        // ============================================================
+        function capturarFoto() {
+            composer.render();
+            const link = document.createElement('a');
+            link.download = `CYMATIC_${Date.now()}.png`;
+            link.href = renderer.domElement.toDataURL('image/png');
+            link.click();
+            guardarLog('📷 Captura PNG guardada', true);
+        }
+
+        // ============================================================
+        // 10. TECLADO
+        // ============================================================
+        window.addEventListener('keydown', (e) => {
+            const k = e.key.toLowerCase();
+            teclas[k] = true;
+
+            if (e.key === '1') { modoDimension = 1;
+                document.getElementById('txt-dimension').textContent = '1D · Filamento'; }
+            if (e.key === '2') { modoDimension = 2;
+                document.getElementById('txt-dimension').textContent = '2D · Plano'; }
+            if (e.key === '3') { modoDimension = 3;
+                document.getElementById('txt-dimension').textContent = '3D · Espacio'; }
+            if (k === 'q') {
+                modoCuantico = !modoCuantico;
+                document.getElementById('txt-dimension').textContent = modoCuantico ? '⚛️ Cuántico' : '1D · Filamento';
+                guardarLog(`⚛️ Cuántico: ${modoCuantico ? 'ON' : 'OFF'}`, true);
+            }
+            if (e.key === ' ') { e.preventDefault();
+                crearCristal(); }
+            if (k === 'p') { capturarFoto(); }
+            if (k === 'f') { cambiarFigura(); }
+        });
+        window.addEventListener('keyup', (e) => { teclas[e.key.toLowerCase()] = false; });
+
+        // ============================================================
+        // 11. MOUSE
+        // ============================================================
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // ============================================================
+        // 12. BUCLE DE ANIMACIÓN
+        // ============================================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const now = performance.now();
+            frameCount++;
+            if (now >= lastTime + 1000) {
+                document.getElementById('fps').textContent = Math.round((frameCount * 1000) / (now - lastTime));
+                frameCount = 0;
+                lastTime = now;
+            }
+
+            // Audio
+            nivelAudio = 0;
+            if (analyser && dataArray) {
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < dataArray.length; i++) {
+                    sum += dataArray[i];
+                    if (i < FFT_SIZE) {
+                        const h = (dataArray[i] / 255) * 100;
+                        fftBars[i].style.height = Math.max(2, h) + '%';
+                    }
+                }
+                nivelAudio = sum / dataArray.length;
+            }
+
+            // Modulación de osciladores por audio
+            if (synthActivo && osciladores.length > 0) {
+                osciladores.forEach((o, idx) => {
+                    try {
+                        const mod = (nivelAudio / 255) * 50;
+                        o.osc.frequency.setTargetAtTime(o.base + mod, audioContext.currentTime, 0.1);
+                    } catch (e) {}
+                });
+            }
+
+            // Actualizar partículas
+            const posAttr = geometry.attributes.position;
+            const arrayPos = posAttr.array;
+            const time = now * 0.001;
+
+            for (let i = 0; i < COUNT; i++) {
+                const boid = boids[i];
+                let target = new THREE.Vector3();
+
+                // Selección de figura
+                const fig = FIGURAS[figuraIndex];
+
+                if (modoCuantico) {
+                    const amp = 2.0 + (nivelAudio * 0.04);
+                    target.set(
+                        Math.sin(time + boid.fase) * amp,
+                        Math.cos(time * 1.3 + boid.fase) * amp,
+                        Math.sin(time * 0.7 + boid.fase) * amp
+                    );
+                } else if (modoDimension === 1) {
+                    // 1D: Filamento con perturbación
+                    const amp = 0.3 + (nivelAudio * 0.03);
+                    const x = boid.pos.x;
+                    target.x = x;
+                    if (fig === 'Chladni') {
+                        target.y = Math.sin(x * 1.5 + time * 3) * amp * 2;
+                    } else if (fig === 'Lissajous') {
+                        target.y = Math.sin(x * 2 + time * 2) * amp * 1.5;
+                    } else if (fig === 'Espiral') {
+                        const r = 0.5 + (x + 5) / 10 * 2;
+                        target.x = Math.cos(time * 0.5 + x) * r;
+                        target.y = Math.sin(time * 0.5 + x) * r * 0.5;
+                    } else { // Mandala
+                        target.y = Math.sin(x * 2 + time * 2) * amp * 1.5;
+                        target.z = Math.cos(x * 2 + time * 1.5) * amp * 0.8;
+                    }
+                    target.z = 0;
+                } else if (modoDimension === 2) {
+                    // 2D: Plano
+                    const rad = 2.5 + Math.sin(time + boid.fase) * (0.3 + nivelAudio * 0.02);
+                    const ang = boid.fase + time * 0.2;
+                    target.x = Math.cos(ang) * rad;
+                    target.y = Math.sin(ang) * rad;
+                    target.z = 0;
+                } else {
+                    // 3D: Nube
+                    const factor = 1.0 + (nivelAudio * 0.05);
+                    target.copy(boid.target3D).multiplyScalar(factor);
+                }
+
+                // WASD
+                if (teclas['w']) boid.vel.y += 0.002;
+                if (teclas['s']) boid.vel.y -= 0.002;
+                if (teclas['a']) boid.vel.x -= 0.002;
+                if (teclas['d']) boid.vel.x += 0.002;
+
+                boid.vel.clampLength(0, 0.12);
+                boid.pos.lerp(target, 0.05);
+                boid.pos.add(boid.vel);
+                boid.vel.multiplyScalar(0.95);
+
+                arrayPos[i * 3] = boid.pos.x;
+                arrayPos[i * 3 + 1] = boid.pos.y;
+                arrayPos[i * 3 + 2] = boid.pos.z;
+
+                // Color dinámico por audio
+                const color = boid.color;
+                const audioFactor = Math.min(1, nivelAudio / 80);
+                const r = 0.0 + audioFactor * 0.8;
+                const g = 0.8 + (1 - audioFactor) * 0.2;
+                const b = 0.6 + (1 - audioFactor) * 0.4;
+                const posAttrColor = geometry.attributes.color;
+                if (posAttrColor) {
+                    posAttrColor.array[i * 3] = r;
+                    posAttrColor.array[i * 3 + 1] = g;
+                    posAttrColor.array[i * 3 + 2] = b;
+                }
+            }
+            posAttr.needsUpdate = true;
+            if (geometry.attributes.color) geometry.attributes.color.needsUpdate = true;
+
+            // Rotación de partículas por mouse
+            pointsMesh.rotation.y = mouseX * 0.5;
+            pointsMesh.rotation.x = mouseY * 0.3;
+
+            // Cristales
+            cristales.forEach(c => {
+                c.rotation.y += c.userData.rotSpeed;
+                c.rotation.x += 0.005;
+                c.position.y = c.userData.baseY + Math.sin(time * 2 + c.userData.phase) * 0.15 + (nivelAudio * 0.01);
+            });
+
+            // Terreno
+            const terrainPos = terrain.geometry.attributes.position;
+            for (let i = 0; i < terrainPos.count; i++) {
+                const x = terrainPos.array[i * 3];
+                const z = terrainPos.array[i * 3 + 1];
+                const d = Math.sqrt(x * x + z * z);
+                terrainPos.array[i * 3 + 2] = Math.sin(d * 0.8 - time * 2) * (0.08 + nivelAudio * 0.001);
+            }
+            terrainPos.needsUpdate = true;
+
+            controls.update();
+            composer.render();
+        }
+
+        // ============================================================
+        // 13. REDIMENSIONAMIENTO
+        // ============================================================
+        window.addEventListener('resize', () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+            composer.setSize(w, h);
+        });
+
+        // ============================================================
+        // 14. LIMPIAR LOGS
+        // ============================================================
+        document.getElementById('btn-clear-log').addEventListener('click', () => {
+            logArea.innerHTML = '';
+            guardarLog('🗑️ Logs limpiados');
+        });
+
+        // ============================================================
+        // 15. INICIO
+        // ============================================================
+        guardarLog('✅ Motor CYMATIC STUDIO PRO v24 cargado', true);
+        guardarLog('🎛️ Figuras: Chladni, Lissajous, Espiral, Mandala');
+        guardarLog('🔮 Frecuencias Solfeggio disponibles (432-963Hz)');
+        guardarLog('🎹 Teclas: 1-2-3 (dimensiones), Q (cuántico), Espacio (cristal), P (foto), F (figura)');
+
+        animate();
+
+        // Exponer funciones globales para depuración
+        window.crearCristal = crearCristal;
+        window.cambiarFigura = cambiarFigura;
+    </script>
 </body>
 </html>
