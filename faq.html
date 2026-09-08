@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="folio" content="5204160405358537">
+    <meta name="sha" content="a4ff808e">
+    <meta name="trace" content="KRONOS-TRACE-PVA-5204160405358537-KRONOS-MT01JAAF">
+    <title>CYMATIC STUDIO · FAQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <style>
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 255, 204, 0.02) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .faq-container {
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .logo {
+            font-family: var(--font-sans);
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo small {
+            font-size: 0.7rem;
+            font-weight: 400;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.3);
+            margin-left: 8px;
+        }
+        .nav-links {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            transition: var(--transition-fast);
+        }
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-hover);
+            background: rgba(0, 255, 204, 0.02);
+        }
+        .faq-item {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            margin-bottom: 16px;
+            transition: var(--transition-med);
+        }
+        .faq-item:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-glow);
+        }
+        .faq-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .faq-item h3::before {
+            content: '▸';
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+        }
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            padding-left: 28px;
+        }
+        .faq-item code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+        }
+        .contact-box {
+            margin-top: 30px;
+            padding: 28px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            backdrop-filter: blur(16px);
+            transition: var(--transition-med);
+        }
+        .contact-box:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-glow);
+        }
+        .contact-box a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .contact-box a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+        .footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .faq-item h3::before {
+                display: none;
+            }
+            .faq-item p {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="faq-container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">CYMATIC <small>FAQ</small></div>
+            <nav class="nav-links">
+                <a href="index.html">Repertorio</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="checkout.html">Comprar</a>
+            </nav>
+        </header>
+
+        <h1 style="font-size:2.8rem; font-weight:900; margin-bottom:8px; background:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">❓ Preguntas Frecuentes</h1>
+        <p style="color:var(--text-secondary); margin-bottom:30px;">Resolvemos las dudas más comunes sobre CYMATIC STUDIO.</p>
+
+        <!-- FAQ ITEMS -->
+        <div class="faq-item">
+            <h3>¿Cómo recibo mi producto después de pagar?</h3>
+            <p>Recibirás un correo electrónico con el enlace de descarga directa. Para pagos manuales, el envío se realiza en un plazo máximo de <strong>24 horas</strong> después de verificar el comprobante.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Qué incluye la licencia?</h3>
+            <p>Acceso perpetuo a la versión adquirida, actualizaciones menores durante 1 año (PRO), 2 años (ULTRA) o vitalicias (ENTERPRISE). Las licencias PRO, ULTRA y ENTERPRISE incluyen soporte prioritario.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Puedo usar el software en varios dispositivos?</h3>
+            <p><strong>PRO:</strong> hasta 2 dispositivos. <strong>ULTRA:</strong> hasta 3 dispositivos. <strong>ENTERPRISE:</strong> uso ilimitado en tu organización.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿El código está protegido contra copia?</h3>
+            <p>Sí. Cada archivo incluye un sistema de verificación de licencia que bloquea el acceso sin una clave válida. Además, el código está ofuscado en las versiones de pago.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Qué navegadores son compatibles?</h3>
+            <p><strong>Chrome 120+</strong> (recomendado), Edge 120+, Firefox 120+, Opera 100+. Se requiere soporte para WebGL y Web Audio API.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Puedo obtener un reembolso?</h3>
+            <p>Sí, ofrecemos una garantía de devolución de <strong>30 días</strong> si el producto no funciona como se describe en la documentación.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Qué es la "marca blanca" en la versión ENTERPRISE?</h3>
+            <p>Permite reemplazar el logo, nombre, colores y diseño del producto por los tuyos propios. Ideal para agencias y marcas que deseen ofrecer el motor como propio.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Cómo actualizo a una versión superior?</h3>
+            <p>Puedes adquirir un <strong>upgrade</strong> desde el panel de cliente o contactando a <a href="mailto:marco.a.rojas.v@hotmail.com" style="color:var(--accent-cyan);">ventas</a>. El costo del upgrade es la diferencia entre el precio de tu versión actual y la nueva.</p>
+        </div>
+
+        <!-- CONTACTO -->
+        <div class="contact-box">
+            <p><strong style="color:#fff;">¿Aún tienes dudas? Contáctanos directamente.</strong></p>
+            <p style="color:var(--text-secondary); margin-top:6px;">
+                📧 <a href="mailto:marco.a.rojas.v@hotmail.com">marco.a.rojas.v@hotmail.com</a> ·
+                📧 <a href="mailto:proyectokronos@hotmail.com">proyectokronos@hotmail.com</a>
+            </p>
+            <p style="color:var(--text-secondary); margin-top:4px;">
+                📱 <a href="https://wa.me/527225862335" target="_blank">+52 722 586 2335 (WhatsApp)</a>
+            </p>
+            <p style="color:var(--text-tertiary); font-size:0.8rem; margin-top:8px;">
+                Respondemos en menos de <strong style="color:var(--accent-cyan);">12 horas</strong> en días hábiles.
+            </p>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>© 2026 CYMATIC STUDIO · <a href="index.html">Repertorio</a> · <a href="dashboard.html">Dashboard</a> · <a href="checkout.html">Comprar</a></p>
+            <div style="margin-top:4px; font-size:0.6rem; color:var(--text-tertiary);">Folio: 5204160405358537 · SHA: a4ff808e</div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
