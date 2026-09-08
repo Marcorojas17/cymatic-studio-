@@ -45,3 +45,55 @@ Al abrir el archivo, verás:
 - **Metadatos de seguridad** (Folio, SHA, Trace).
 
 ### Mensaje de Estado
+🕊️ Legado
+CYMATIC STUDIO
+v1.0 · Quantum Seed
+
+● Nodo estático de entrada
+Sin audio · Sin canvas · Sin interacción
+El origen del motor cimático.
+
+---
+
+## 🔍 Interpretación de la Interfaz
+
+| Elemento | Significado |
+| :--- | :--- |
+| **Punto parpadeante** | Indica que el nodo está activo, aunque no haya interactividad. |
+| **Folio** | Identificador único de la versión. |
+| **SHA** | Hash de verificación de integridad del archivo. |
+| **Trace** | Código de trazabilidad para soporte técnico. |
+
+---
+
+## ❓ Solución de Problemas
+
+| Problema | Solución |
+| :--- | :--- |
+| **El archivo no se abre** | Asegúrate de que la extensión sea `.html`. Si no, renómbralo. |
+| **No se ve el texto** | Verifica que el navegador esté actualizado. Usa Chrome o Edge. |
+| **Aparece una pantalla en blanco** | Revisa la consola del navegador (F12) para ver errores. |
+
+---
+
+## 📞 Soporte
+
+Para consultas sobre esta versión:
+
+- 📧 **Correo:** marco.a.rojas.v@hotmail.com
+- 📧 **Alternativo:** proyectokronos@hotmail.com
+- 📱 **WhatsApp:** +52 722 586 2335
+
+---
+
+## 🚀 Siguientes Pasos
+
+Si deseas explorar funcionalidades más avanzadas:
+
+- **Actualiza a la versión PRO (v8.0)** para acceder a canvas interactivo y Bloom.
+- **Actualiza a la versión ULTRA (v15.0)** para audio y síntesis.
+- **Actualiza a la versión ENTERPRISE (v21.5+)** para FFT, WebGL y sonido Hi-Fi.
+
+---
+
+**© 2026 CYMATIC STUDIO · Todos los derechos reservados.**
