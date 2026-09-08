@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" width="400" height="140" fill="none">
+    <defs>
+        <!-- Gradiente principal del logo -->
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00ffcc;stop-opacity:1" />
+            <stop offset="40%" style="stop-color:#a855f7;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ff00cc;stop-opacity:1" />
+        </linearGradient>
+
+        <!-- Gradiente secundario (purpura) -->
+        <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#9d4edd;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+        </linearGradient>
+
+        <!-- Sombra para el símbolo -->
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- ===== SÍMBOLO CUÁNTICO ===== -->
+    <!-- Círculo exterior -->
+    <circle cx="70" cy="70" r="48" stroke="url(#logoGrad)" stroke-width="3" opacity="0.15" filter="url(#glow)" />
+
+    <!-- Círculo principal -->
+    <circle cx="70" cy="70" r="34" stroke="url(#logoGrad)" stroke-width="2.5" />
+
+    <!-- Círculo interior -->
+    <circle cx="70" cy="70" r="20" stroke="url(#logoGrad2)" stroke-width="2" />
+
+    <!-- Punto central -->
+    <circle cx="70" cy="70" r="6" fill="url(#logoGrad)" />
+
+    <!-- Ondas cimáticas (filamentos) -->
+    <path d="M70 36 Q85 50 70 70 Q55 90 70 104" stroke="url(#logoGrad)" stroke-width="2" fill="none" />
+    <path d="M70 36 Q55 50 70 70 Q85 90 70 104" stroke="url(#logoGrad2)" stroke-width="1.5" fill="none" opacity="0.5" />
+
+    <!-- ===== TEXTO ===== -->
+    <!-- "CYMATIC" -->
+    <text x="145" y="78" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="44" font-weight="800" fill="url(#logoGrad)" letter-spacing="-1">
+        CYMATIC
+    </text>
+
+    <!-- "STUDIO" -->
+    <text x="145" y="114" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="18" font-weight="400" fill="#94a3b8" letter-spacing="6" opacity="0.6">
+        STUDIO
+    </text>
+
+    <!-- Línea decorativa -->
+    <line x1="145" y1="122" x2="360" y2="122" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+
+    <!-- Versión pequeña -->
+    <text x="145" y="134" font-family="'JetBrains Mono', monospace" font-size="8" fill="#475569" letter-spacing="1">
+        v24 · QUANTUM CORE
+    </text>
+
+    <!-- Traza de seguridad (al pie) -->
+    <text x="145" y="144" font-family="'JetBrains Mono', monospace" font-size="5" fill="#334155" letter-spacing="0.5" opacity="0.4">
+        FOLIO: 5204160405358537 · SHA: a4ff808e
+    </text>
+
+</svg>
