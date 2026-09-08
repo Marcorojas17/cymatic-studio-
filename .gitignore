@@ -1,0 +1,245 @@
+Ignora archivos innecesarios o sensibles para el control de versiones.
+============================================================
+----------------------------------------
+ARCHIVOS DEL SISTEMA OPERATIVO
+----------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+----------------------------------------
+ENTORNOS DE DESARROLLO Y EDITORES
+----------------------------------------
+VS Code
+.vscode/
+.vscode-test/
+*.code-workspace
+
+IntelliJ / WebStorm / PhpStorm / RubyMine
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+Atom
+.atom/
+*.atom
+
+Vim
+*.swp
+*.swo
+*.un~
+*.tmp
+
+Emacs
+~
+##
+.#*
+
+----------------------------------------
+DEPENDENCIAS Y PAQUETES
+----------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+----------------------------------------
+ENTORNOS DE EJECUCIÓN Y VARIABLES
+----------------------------------------
+.env
+.env.local
+.env.*.local
+*.env
+
+----------------------------------------
+ARCHIVOS DE LOGS Y TEMPORALES
+----------------------------------------
+*.log
+*.tmp
+*.temp
+*.cache
+*.pid
+*.seed
+*.pid.lock
+
+----------------------------------------
+ARCHIVOS DE COMPILACIÓN Y CONSTRUCCIÓN
+----------------------------------------
+dist/
+build/
+out/
+target/
+*.min.js
+*.min.css
+*.gz
+*.zip
+*.tar.gz
+*.7z
+
+----------------------------------------
+ARCHIVOS DE BASES DE DATOS
+----------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+----------------------------------------
+ARCHIVOS DE PRUEBAS Y COBERTURA
+----------------------------------------
+coverage/
+.nyc_output/
+*.test.js
+*.spec.js
+
+----------------------------------------
+ARCHIVOS DE DOCUMENTACIÓN AUTOGENERADA
+----------------------------------------
+docs/_build/
+docs/api/
+*.pdf
+*.epub
+*.mobi
+
+----------------------------------------
+ARCHIVOS DE PROYECTOS FRONTEND
+----------------------------------------
+React / Vue / Angular
+.eslintcache
+*.tsbuildinfo
+.next/
+.nuxt/
+.svelte-kit/
+
+----------------------------------------
+ARCHIVOS DE BACKEND (Node.js, Python, etc.)
+----------------------------------------
+Python
+pycache/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+.env
+
+Node.js
+*.node
+
+----------------------------------------
+ARCHIVOS DE DESPLIEGUE Y SERVIDOR
+----------------------------------------
+.vercel/
+.netlify/
+.aws-sam/
+serverless/
+
+----------------------------------------
+ARCHIVOS DE CONFIGURACIÓN DE DOCKER
+----------------------------------------
+.dockerignore
+docker-compose.override.yml
+
+----------------------------------------
+ARCHIVOS DE SEGURIDAD (nunca subir)
+----------------------------------------
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+
+----------------------------------------
+ARCHIVOS PROPIOS DEL PROYECTO (CYMATIC STUDIO)
+----------------------------------------
+Archivos de licencia generados localmente
+*.lic
+*.license
+*.keygen
+
+Backups de versiones
+versions/.bak
+versions/.old
+
+Archivos de configuración local
+local.config.js
+local.css
+
+----------------------------------------
+ARCHIVOS DE COMPRESIÓN (no versionar)
+----------------------------------------
+*.rar
+*.7z
+*.zip
+
+----------------------------------------
+ARCHIVOS DE IMAGEN (no versionar)
+----------------------------------------
+(opcional, se pueden incluir si son grandes)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+----------------------------------------
+ARCHIVOS DE AUDIO (no versionar)
+----------------------------------------
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+
+----------------------------------------
+ARCHIVOS DE VIDEO (no versionar)
+----------------------------------------
+*.mp4
+*.avi
+*.mov
+*.webm
+
+----------------------------------------
+ARCHIVOS DE RELEASE (no versionar)
+----------------------------------------
+release/
+*.dmg
+*.exe
+*.msi
+*.deb
+*.rpm
+
+----------------------------------------
+ARCHIVOS DE CONFIGURACIÓN DE PRUEBAS
+----------------------------------------
+.jest/
+.cypress/
+playwright-report/
+
+----------------------------------------
+OTROS ARCHIVOS GENERADOS POR HERRAMIENTAS
+----------------------------------------
+.terraform/
+*.tfstate
+.tfstate.
+.terragrunt-cache/
+
+----------------------------------------
+FIN DEL ARCHIVO
+----------------------------------------
